@@ -38,32 +38,32 @@ const productos = [
   {
     nombre: "Cherry Quick",
     desc: "Quick detailer con aroma a cereza. Brillo instantáneo entre lavados.",
-    img: "https://static.toxicshine.com.ar/prod/2024/10/Cherry-Quick-768x1149.jpg",
+    img: "/Cherry-Quick-768x1149.jpg",
   },
   {
     nombre: "Illusion Wax",
     desc: "Cera de carnauba premium. Protección y brillo de larga duración.",
-    img: "https://static.toxicshine.com.ar/prod/2024/10/Ilussion-Wax-768x1149.jpg",
+    img: "/Ilussion-Wax-768x1149.jpg",
   },
   {
     nombre: "Shampoo Banana",
     desc: "Shampoo pH neutro con aroma a banana. Limpieza suave y segura.",
-    img: "https://static.toxicshine.com.ar/prod/2025/02/Shampoo-Banana-768x1149.jpg",
+    img: "/Shampoo-Banana-768x1149.jpg",
   },
   {
     nombre: "Iron Warning",
     desc: "Descontaminante ferroso. Elimina el polvo de freno eficazmente.",
-    img: "https://static.toxicshine.com.ar/prod/2025/02/Iron-Warning-768x1149.jpg",
+    img: "/Iron-Warning-768x1149.jpg",
   },
   {
     nombre: "Hyper Black",
     desc: "Restaurador de plásticos negros. Deja un acabado profundo y duradero.",
-    img: "https://static.toxicshine.com.ar/prod/2025/02/Hyper-Black-768x1149.jpg",
+    img: "/Hyper-Black-768x1149.jpg",
   },
   {
     nombre: "Seal It All",
     desc: "Sellador universal de pintura. Protección máxima con alto brillo.",
-    img: "https://static.toxicshine.com.ar/prod/2025/02/Seal-It-All-768x1149.jpg",
+    img: "/Seal-It-All-768x1149.jpg",
   },
 ];
 ---
@@ -83,21 +83,61 @@ const productos = [
 <body>
 
 <!-- ══ NAV ══════════════════════════════════════════════════ -->
-<nav>
+<nav id="siteNav">
   <div class="nav-inner">
     <a href="/" class="nav-logo">
       <span class="logo-jlm">JLM</span>
       <span class="logo-det">DETAILING</span>
     </a>
-    <div class="nav-links">
+    <div class="nav-links" id="navLinks">
       <a href="#servicios">Servicios</a>
       <a href="#productos">Productos</a>
       <a href="#galeria">Galería</a>
       <a href="#contacto">Contacto</a>
       <a href={TURNOS_URL} class="nav-cta" target="_blank" rel="noopener">Reservar turno</a>
     </div>
+    <button
+      type="button"
+      class="nav-toggle"
+      id="navToggle"
+      aria-label="Abrir menú"
+      aria-expanded="false"
+      aria-controls="navLinks"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
   </div>
 </nav>
+
+<script>
+  const nav = document.getElementById("siteNav");
+  const toggle = document.getElementById("navToggle");
+  const links = document.getElementById("navLinks");
+
+  if (nav && toggle && links) {
+    const closeMenu = () => {
+      nav.classList.remove("nav-open");
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.setAttribute("aria-label", "Abrir menú");
+    };
+
+    toggle.addEventListener("click", () => {
+      const isOpen = nav.classList.toggle("nav-open");
+      toggle.setAttribute("aria-expanded", String(isOpen));
+      toggle.setAttribute("aria-label", isOpen ? "Cerrar menú" : "Abrir menú");
+    });
+
+    links.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", closeMenu);
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeMenu();
+    });
+  }
+</script>
 
 <!-- ══ HERO ═════════════════════════════════════════════════ -->
 <section class="hero">
@@ -217,7 +257,7 @@ const productos = [
       {productos.map(p => (
         <div class="producto-card">
           <div class="producto-img-wrap">
-            <img src={p.img} alt={p.nombre} class="producto-img" />
+            <img src={p.img} alt={p.nombre} class="producto-img" loading="lazy" decoding="async" />
           </div>
           <div class="producto-info">
             <h3 class="producto-nombre">{p.nombre}</h3>
@@ -311,19 +351,19 @@ const productos = [
     </div>
     <div class="galeria-grid">
       <div class="galeria-item">
-        <img src="/1.jpg" alt="Trabajo destacado" />
+        <img src="/1.jpg" alt="Trabajo destacado" loading="lazy" decoding="async" />
       </div>
       <div class="galeria-item">
-        <img src="/2.jpg" alt="Pulido de pintura" />
+        <img src="/2.jpg" alt="Pulido de pintura" loading="lazy" decoding="async" />
       </div>
       <div class="galeria-item">
-        <img src="/3.jpg" alt="Cerámica aplicada" />
+        <img src="/3.jpg" alt="Cerámica aplicada" loading="lazy" decoding="async" />
       </div>
       <div class="galeria-item">
-        <img src="/4.jpg" alt="Detailing interior" />
+        <img src="/4.jpg" alt="Detailing interior" loading="lazy" decoding="async" />
       </div>
       <div class="galeria-item">
-        <img src="/5.jpg" alt="Antes / Después" />
+        <img src="/5.jpg" alt="Antes / Después" loading="lazy" decoding="async" />
       </div>
     </div>
     <div class="galeria-ig">
@@ -470,6 +510,14 @@ const productos = [
     font-weight: 600 !important; transition: background 0.2s, transform 0.2s !important;
   }
   .nav-cta:hover { background: var(--gold-2) !important; transform: translateY(-1px); }
+  .nav-toggle {
+    display: none; flex-direction: column; justify-content: center; gap: 5px;
+    width: 36px; height: 36px; background: none; border: none; cursor: pointer; padding: 0;
+  }
+  .nav-toggle span { display: block; width: 100%; height: 2px; background: var(--white); border-radius: 2px; transition: transform 0.25s ease, opacity 0.25s ease; }
+  .nav-open .nav-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-open .nav-toggle span:nth-child(2) { opacity: 0; }
+  .nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
   /* ── HERO ── */
   .hero {
@@ -516,7 +564,7 @@ const productos = [
   .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 4rem; animation: fadeInUp 0.6s 0.3s ease both; }
   .hero-stats { display: flex; align-items: center; gap: 2rem; animation: fadeInUp 0.6s 0.4s ease both; }
   .stat-num { display: block; font-family: var(--font-display); font-size: 2rem; letter-spacing: 0.02em; color: var(--white); }
-  .stat-label { display: block; font-size: 0.6875rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--white-1); }
+  .stat-label { display: block; font-size: 0.6875rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--white-3); }
   .stat-div { width: 1px; height: 40px; background: rgba(255,255,255,0.1); }
   .hero-scroll {
     position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
@@ -644,7 +692,7 @@ const productos = [
     flex: 1;
   }
   .producto-nombre {
-    font-family: var(--font-condensed);
+    font-family: var(--font-body);
     font-size: 1.0625rem;
     font-weight: 700;
     color: var(--white);
@@ -666,7 +714,7 @@ const productos = [
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--red);
+    color: var(--gold-2);
     border: 1px solid rgba(239,68,68,0.3);
     padding: 3px 8px;
     border-radius: 99px;
@@ -677,17 +725,6 @@ const productos = [
     transition: background 0.2s, transform 0.15s;
   }
   .producto-cta:hover { background: #15803d; transform: translateY(-1px); }
-
-  /* ── PROCESO ── */
-  .proceso { padding: 8rem 0; background: var(--black-2); }
-  .proceso-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
-  .pasos { display: flex; flex-direction: column; }
-  .paso { display: flex; gap: 1.5rem; align-items: flex-start; }
-  .paso-num { font-family: var(--font-display); font-size: 3rem; color: rgba(239,68,68,0.2); line-height: 1; flex-shrink: 0; transition: color 0.3s; }
-  .paso:hover .paso-num { color: var(--red); }
-  .paso-content h3 { font-family: var(--font-condensed); font-size: 1.125rem; font-weight: 700; color: var(--white); margin-bottom: 6px; }
-  .paso-content p { font-size: 0.875rem; color: var(--white-2); line-height: 1.6; }
-  .paso-conector { width: 1px; height: 40px; background: rgba(239,68,68,0.2); margin: 0.5rem 0 0.5rem 1.5rem; }
 
   /* ── GALERÍA ── */
   .galeria { padding: 8rem 0; }
@@ -724,15 +761,6 @@ const productos = [
   }
   .galeria-item:hover img { transform: scale(1.06); }
 
-  .galeria-cta { margin-top: 2.5rem; text-align: center; }
-  .ig-btn {
-    display: inline-flex; align-items: center; gap: 10px; font-size: 0.9375rem;
-    font-weight: 500; color: var(--white-2); text-decoration: none; padding: 12px 24px;
-    border: 1px solid rgba(255,255,255,0.12); border-radius: 99px;
-    transition: border-color 0.2s, color 0.2s, background 0.2s;
-  }
-  .ig-btn:hover { border-color: var(--red); color: var(--white); background: rgba(239,68,68,0.05); }
-
   /* ── POR QUÉ ── */
   .porque { padding: 8rem 0; background: var(--black-2); }
   .porque-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
@@ -752,21 +780,6 @@ const productos = [
   .visual-num { font-family: var(--font-display); font-size: 2.5rem; color: rgba(240, 12, 12, 0.678); flex-shrink: 0; }
   .visual-text { font-size: 0.9375rem; color: var(--white-2); line-height: 1.5; }
 
-  /* ── GALERÍA ── */
-  .galeria { padding: 8rem 0; }
-  .galeria-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: auto auto; gap: 12px; }
-  .galeria-item {
-    border-radius: 12px; overflow: hidden; background: var(--black-3);
-    border: 1px solid rgba(255,255,255,0.07); min-height: 220px;
-  }
-  .galeria-item.tall { grid-row: span 2; min-height: 460px; }
-  .galeria-item.wide { grid-column: span 2; }
-  .galeria-placeholder {
-    width: 100%; height: 100%; min-height: 220px;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 10px; color: var(--white-3);
-  }
-  .galeria-placeholder span { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; }
   .galeria-ig { margin-top: 2rem; text-align: center; }
   .ig-link {
     display: inline-flex; align-items: center; gap: 8px; font-size: 0.875rem; color: var(--white-2);
@@ -818,19 +831,33 @@ const productos = [
 
   /* ── RESPONSIVE ── */
   @media (max-width: 900px) {
-    .nav-links { display: none; }
+    .nav-toggle { display: flex; }
+    .nav-links {
+      position: absolute; top: 64px; left: 0; right: 0;
+      flex-direction: column; align-items: stretch; gap: 0;
+      background: rgba(8,8,8,0.98); border-bottom: 1px solid rgba(255,255,255,0.08);
+      max-height: 0; overflow: hidden; opacity: 0; pointer-events: none;
+      transition: max-height 0.3s ease, opacity 0.2s ease;
+    }
+    nav.nav-open .nav-links { max-height: 420px; opacity: 1; pointer-events: auto; }
+    .nav-links a {
+      padding: 16px 2rem; border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-links .nav-cta {
+      margin: 14px 2rem; text-align: center; justify-content: center;
+    }
     .servicios-grid { grid-template-columns: 1fr; }
     .productos-grid { grid-template-columns: repeat(2, 1fr); }
     .porque-grid { grid-template-columns: 1fr; gap: 3rem; }
     .contacto-grid { grid-template-columns: 1fr; gap: 3rem; }
-    .galeria-grid { grid-template-columns: 1fr 1fr; }
-    .galeria-item.tall { grid-row: span 1; }
-    .galeria-item.wide { grid-column: span 2; }
+    .galeria-grid { grid-template-columns: 1fr 1fr; grid-template-rows: none; }
+    .galeria-item:nth-child(n) { grid-column: auto; grid-row: auto; }
+    .galeria-item { aspect-ratio: 1 / 1; }
   }
   @media (max-width: 480px) {
     .productos-grid { grid-template-columns: 1fr; }
     .galeria-grid { grid-template-columns: 1fr; }
-    .galeria-item.wide { grid-column: span 1; }
+    .galeria-item { aspect-ratio: 4 / 3; }
     .hero-actions { flex-direction: column; }
     .hero-stats { flex-wrap: wrap; gap: 1rem; }
     .stat-div { display: none; }
